@@ -15,6 +15,7 @@ block content
             .home__titles__title__text=collection.data.title
 
       .home__gallery
+        each rows in [0, 1]
           each media, index in home.data.gallery
             figure.home__gallery__media(class=`home__gallery__media--${index % 5 + 1}`)
               img.home__gallery__media__image(alt=media.image.alt data-src=media.image.url)
