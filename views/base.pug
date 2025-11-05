@@ -37,4 +37,6 @@ html(class=isDesktop ? "desktop" : isTablet ? "tablet" : isPhone ? "phone" : "" 
     include ./partials/navigation
 
     .content#content(data-template=template)
-    block content
+      block content
+
+    script(src="main.js")
