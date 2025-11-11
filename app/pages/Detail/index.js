@@ -1,4 +1,4 @@
-import Page from "classes/page";
+import Page from "classes/Page";
 
 export default class Detail extends Page {
   constructor() {

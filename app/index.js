@@ -3,13 +3,21 @@ import About from "pages/About";
 import Detail from "pages/Detail";
 import Collections from "pages/Collections";
 
+import Preloader from "components/Preloader";
 import each from "lodash/each";
 
 class App {
   constructor() {
+    this.createPreloader();
     this.createContent();
     this.createPages();
     this.addLinkListeners();
+  }
+
+  createPreloader() {
+    this.preloader = new Preloader();
+
+    this.preloader.once("completed", () => this.onPreloaded());
   }
 
   createContent() {
@@ -27,6 +35,10 @@ class App {
 
     this.page = this.pages[this.template];
     this.page.create();
+  }
+
+  onPreloaded() {
+    this.preloader.destroy();
   }
 
   async onChange(url) {
@@ -48,6 +60,8 @@ class App {
       this.page = this.pages[this.template];
       this.page.create();
       this.page.show();
+
+      this.addLinkListeners();
     } else {
       console.error(`response status: ${res.status}`);
     }
