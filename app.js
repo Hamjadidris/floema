@@ -19,7 +19,7 @@ app.use(errorHandler());
 app.use(express.static(path.join(__dirname, "public")));
 
 const Prismic = require("@prismicio/client");
-const PrismicDom = require("prismic-dom");
+const PrismicDOM = require("prismic-dom");
 const UAParser = require("ua-parser-js");
 
 const initApp = (req) => {
@@ -57,7 +57,7 @@ app.use((req, res, next) => {
 
   res.locals.Link = handleLinkResolver;
 
-  res.locals.PrismicDom = PrismicDom;
+  res.locals.PrismicDOM = PrismicDOM;
 
   res.locals.Numbers = (index) => {
     return index == 0

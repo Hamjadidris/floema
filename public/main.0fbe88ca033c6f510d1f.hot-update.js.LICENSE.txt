@@ -1,6 +1,12 @@
+/*! animations/Title */
+
 /*! gsap */
 
 /*! lodash/each */
+
+/*! lodash/map */
+
+/*! normalize-wheel */
 
 /*! prefix */
 
