@@ -11,7 +11,7 @@ class App {
   constructor() {
     this.createContent();
 
-    this.createNavigation()
+    this.createNavigation();
     this.createPreloader();
     this.createPages();
     this.addLinkListeners();
@@ -55,7 +55,14 @@ class App {
     this.page.show();
   }
 
-  async onChange(url) {
+  onPopState() {
+    this.onChange({
+      url: window.location.pathname,
+      push: false,
+    });
+  }
+
+  async onChange({ url, push = true }) {
     await this.page.hide();
 
     const res = await window.fetch(url);
@@ -63,6 +70,11 @@ class App {
       const html = await res.text();
 
       const div = document.createElement("div");
+
+      if (push) {
+        window.history.pushState({}, "", url);
+      }
+
       div.innerHTML = html;
 
       const divContent = div.querySelector(".content");
@@ -100,6 +112,7 @@ class App {
   }
 
   addEventListeners() {
+    window.addEventListener("popstate", this.onPopState.bind(this));
     window.addEventListener("resize", this.onResize.bind(this));
   }
 
@@ -112,7 +125,7 @@ class App {
 
         const { href } = link;
 
-        this.onChange(href);
+        this.onChange({ url: href });
       };
     });
   }
