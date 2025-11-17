@@ -4,17 +4,26 @@ import Detail from "pages/Detail";
 import Collections from "pages/Collections";
 
 import Preloader from "components/Preloader";
+import Navigation from "components/Navigation";
 import each from "lodash/each";
 
 class App {
   constructor() {
-    this.createPreloader();
     this.createContent();
+
+    this.createNavigation()
+    this.createPreloader();
     this.createPages();
     this.addLinkListeners();
     this.addEventListeners();
 
     this.update();
+  }
+
+  createNavigation() {
+    this.navigation = new Navigation({
+      template: this.template,
+    });
   }
 
   createPreloader() {
@@ -60,6 +69,9 @@ class App {
       this.content.innerHTML = divContent.innerHTML;
 
       this.template = divContent.getAttribute("data-template");
+
+      this.navigation.onChange(this.template);
+
       this.content.setAttribute("data-template", this.template);
 
       this.page = this.pages[this.template];

@@ -12,6 +12,9 @@ html {
   line-height: 1;
   overflow: hidden;
 
+  background: $color-contessa;
+  color: $color-white;
+
   @include media('<phone') {
     font-size: calc($vw / 750px * 10px);
   }
