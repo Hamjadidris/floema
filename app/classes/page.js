@@ -1,5 +1,4 @@
 import GSAP from "gsap";
-import NormalizeWheel from "normalize-wheel";
 import each from "lodash/each";
 import map from "lodash/map";
 import Prefix from "prefix";
@@ -28,8 +27,6 @@ export default class Page {
     this.id = id;
 
     this.transformPrefix = Prefix("transform");
-
-    this.onMouseWheelEvent = this.onMouseWheel.bind(this);
   }
 
   create() {
@@ -160,9 +157,7 @@ export default class Page {
     });
   }
 
-  onMouseWheel(event) {
-    const { pixelY } = NormalizeWheel(event);
-
+  onWheel({ pixelY }) {
     this.scroll.target += pixelY;
   }
 
@@ -199,13 +194,9 @@ export default class Page {
     }
   }
 
-  addEventListeners() {
-    window.addEventListener("mousewheel", this.onMouseWheelEvent);
-  }
+  addEventListeners() {}
 
-  removeEventListeners() {
-    window.removeEventListener("mousewheel", this.onMouseWheelEvent);
-  }
+  removeEventListeners() {}
 
   destroy() {
     this.removeEventListeners();
