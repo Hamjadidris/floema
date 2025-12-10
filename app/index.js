@@ -38,7 +38,9 @@ class App {
   }
 
   creaveCanvas() {
-    this.canvas = new Canvas();
+    this.canvas = new Canvas({
+      template: this.template,
+    });
   }
 
   createContent() {
@@ -72,28 +74,32 @@ class App {
   }
 
   async onChange({ url, push = true }) {
-    await this.page.hide();
+    this.canvas.onChangeStart(this.template);
 
+    await this.page.hide();
     const res = await window.fetch(url);
+
     if (res.status === 200) {
       const html = await res.text();
 
       const div = document.createElement("div");
 
-      if (push) {
-        window.history.pushState({}, "", url);
-      }
+      // if (push) {
+      //   window.history.pushState({}, "", url);
+      // }
 
       div.innerHTML = html;
 
       const divContent = div.querySelector(".content");
-      this.content.innerHTML = divContent.innerHTML;
 
       this.template = divContent.getAttribute("data-template");
 
       this.navigation.onChange(this.template);
 
       this.content.setAttribute("data-template", this.template);
+      this.content.innerHTML = divContent.innerHTML;
+
+      this.canvas.onChangeEnd(this.template);
 
       this.page = this.pages[this.template];
       this.page.create();
@@ -149,12 +155,12 @@ class App {
   }
 
   update() {
-    if (this.canvas && this.canvas.update) {
-      this.canvas.update();
-    }
-
     if (this.page && this.page.update) {
       this.page.update();
+    }
+
+    if (this.canvas && this.canvas.update) {
+      this.canvas.update(this.page.scroll);
     }
 
     this.frame = window.requestAnimationFrame(this.update.bind(this));
@@ -172,7 +178,6 @@ class App {
     window.addEventListener("touchmove", this.onTouchMove.bind(this));
     window.addEventListener("touchend", this.onTouchUp.bind(this));
 
-    window.addEventListener("popstate", this.onPopState.bind(this));
     window.addEventListener("resize", this.onResize.bind(this));
   }
 

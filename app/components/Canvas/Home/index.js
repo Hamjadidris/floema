@@ -20,7 +20,7 @@ export default class Home {
     this.createGeometry();
     this.createGallery();
 
-    this.group.setParent(scene);
+    this.group.setParent(this.scene);
 
     this.x = {
       current: 0,
@@ -43,6 +43,8 @@ export default class Home {
       x: 0,
       y: 0,
     };
+
+    this.show();
   }
 
   createScene() {
@@ -64,6 +66,15 @@ export default class Home {
         sizes: this.sizes,
       });
     });
+  }
+
+  // Animations
+  show() {
+    map(this.medias, (media) => media.show());
+  }
+
+  hide() {
+    map(this.medias, (media) => media.hide());
   }
 
   onTouchDown({ x, y }) {
@@ -174,5 +185,9 @@ export default class Home {
 
       media.update(this.scroll);
     });
+  }
+
+  destroy() {
+    this.scene.removeChild(this.group);
   }
 }
