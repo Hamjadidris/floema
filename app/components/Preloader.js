@@ -79,7 +79,7 @@ export default class Preloader extends Component {
           stagger: 0.1,
           y: "100%",
         },
-        "-=1.4"
+        "-=1.4",
       );
 
       this.animateOut.to(
@@ -90,7 +90,7 @@ export default class Preloader extends Component {
           scale: 0,
           transformOrigin: "100% 100%",
         },
-        "-=1"
+        "-=1",
       );
 
       this.animateOut.call((_) => {

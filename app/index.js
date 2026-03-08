@@ -77,16 +77,12 @@ class App {
     this.canvas.onChangeStart(this.template);
 
     await this.page.hide();
+
     const res = await window.fetch(url);
 
     if (res.status === 200) {
       const html = await res.text();
-
       const div = document.createElement("div");
-
-      // if (push) {
-      //   window.history.pushState({}, "", url);
-      // }
 
       div.innerHTML = html;
 
@@ -103,7 +99,9 @@ class App {
 
       this.page = this.pages[this.template];
       this.page.create();
+
       this.onResize();
+
       this.page.show();
 
       this.addLinkListeners();

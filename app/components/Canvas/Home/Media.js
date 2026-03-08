@@ -35,7 +35,7 @@ export default class Media {
   createTexture() {
     this.texture = new Texture(this.gl);
 
-    this.image = new Image();
+    this.image = new window.Image();
     this.image.crossOrigin = "anonymous";
     this.image.src = this.element.getAttribute("data-src");
     this.image.onload = () => (this.texture.image = this.image);

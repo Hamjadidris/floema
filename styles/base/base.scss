@@ -46,6 +46,11 @@ img {
   vertical-align: middle;
 }
 
+canvas {
+  pointer-events: none;
+  position: relative;
+}
+
 .content {
   @extend %cover;
 }
