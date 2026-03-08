@@ -7,7 +7,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const ImageMinimizerPlugin = require("image-minimizer-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
-const IS_DEVELOPMENT = process.env.NODE_ENV === 'dev'
+const IS_DEVELOPMENT = process.env.NODE_ENV === "dev";
 
 const dirApp = path.join(__dirname, "app");
 const dirShared = path.join(__dirname, "shared");
@@ -88,14 +88,9 @@ module.exports = {
 
       {
         test: /\.(jpe?g|png|gif|svg|woff2?|fnt|webp)$/,
-        loader: "file-loader",
-        options: {
-          name(file) {
-            return "[hash].[ext]";
-          },
-        },
+        type: "asset/resource",
+   
       },
-
       {
         test: /\.(jpe?g|png|gif|svg|webp)$/i,
         use: [
