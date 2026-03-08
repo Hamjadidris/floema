@@ -9,6 +9,8 @@ import {
 } from "ogl";
 import GSAP from "gsap";
 
+import Detection from "classes/Detection";
+
 import vertex from "shaders/plain-vertex.glsl";
 import fragment from "shaders/plain-fragment.glsl";
 
@@ -60,7 +62,9 @@ export default class Media {
     this.mesh.setParent(this.scene);
   }
 
-  createBounds() {
+  createBounds({ sizes }) {
+    this.sizes = sizes;
+
     this.bounds = this.element.getBoundingClientRect();
 
     this.updateScale();
@@ -85,7 +89,7 @@ export default class Media {
       },
       {
         value: 1,
-      }
+      },
     );
   }
 
@@ -109,7 +113,7 @@ export default class Media {
       this.sizes.width / 2,
       Math.PI * 0.1,
       -Math.PI * 0.1,
-      this.mesh.position.x
+      this.mesh.position.x,
     );
   }
 
@@ -122,7 +126,7 @@ export default class Media {
   updateY(y = 0) {
     this.y = (this.bounds.top + y) / window.innerHeight;
 
-    // const extra = Detection.isPhone() ? 20 : 40;
+    const extra = Detection.isPhone() ? 20 : 40;
 
     this.mesh.position.y = (this.sizes.height / 2) - (this.mesh.scale.y / 2) - (this.y  * this.sizes.height); // prettier-ignore
     this.mesh.position.y += Math.cos((this.mesh.position.x / this.sizes.width) * Math.PI * 0.1) * 58 - 58; // prettier-ignore
@@ -134,6 +138,6 @@ export default class Media {
     this.updateRotation();
     this.updateScale();
     this.updateX(scroll);
-    this.updateY();
+    this.updateY(0);
   }
 }

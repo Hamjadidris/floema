@@ -34,7 +34,7 @@ export default class Gallery {
 
   createMedias() {
     this.mediaElements = this.element.querySelectorAll(
-      ".about__gallery__media"
+      ".about__gallery__media",
     );
 
     this.medias = map(this.mediaElements, (element, index) => {
@@ -64,7 +64,7 @@ export default class Gallery {
     this.sizes = event.sizes;
 
     this.width = (this.bounds.width / window.innerWidth) * this.sizes.width;
-    this.height =(this.bounds.height / window.innerHeight) * this.sizes.height // prettier-ignore
+    // this.height =(this.bounds.height / window.innerHeight) * this.sizes.height // prettier-ignore
 
     this.scroll.current = this.scroll.target = 0;
 
@@ -89,10 +89,10 @@ export default class Gallery {
     const distance = (scroll.current - scroll.target) * 0.1;
     const y = scroll.current / window.innerHeight;
 
-    if (this.scroll.target > this.scroll.current) {
+    if (this.scroll.target < this.scroll.current) {
       this.direction = "left";
       this.scroll.velocity = 1;
-    } else if (this.scroll.target < this.scroll.current) {
+    } else if (this.scroll.target > this.scroll.current) {
       this.direction = "right";
       this.scroll.velocity = -1;
     }
