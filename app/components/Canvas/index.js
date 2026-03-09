@@ -18,13 +18,13 @@ export default class Canvas {
       end: 0,
     };
 
+    this.template = template;
+
     this.createRenderer();
     this.createCamera();
     this.createScene();
 
     this.onResize();
-
-    this.onChangeEnd(template);
   }
 
   createRenderer() {
@@ -123,6 +123,10 @@ export default class Canvas {
     } else if (this.about) {
       this.destroyAbout();
     }
+  }
+
+  onPreloaded() {
+    this.onChangeEnd(this.template);
   }
 
   onResize() {

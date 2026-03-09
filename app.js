@@ -69,12 +69,12 @@ app.use((req, res, next) => {
     return index == 0
       ? "One"
       : index == 1
-      ? "Two"
-      : index == 2
-      ? "Three"
-      : index == 3
-      ? "Four"
-      : "";
+        ? "Two"
+        : index == 2
+          ? "Three"
+          : index == 3
+            ? "Four"
+            : "";
   };
 
   next();
@@ -118,39 +118,39 @@ const handleRequest = async (client) => {
   //   });
   // });
 
-  // const assets = [];
+  const assets = [];
 
-  // home.data.gallery.forEach((item) => {
-  //   assets.push(item.image.url);
-  // });
+  home.data.gallery.forEach((item) => {
+    assets.push(item.image.url);
+  });
 
-  // about.data.gallery.forEach((item) => {
-  //   assets.push(item.image.url);
-  // });
+  about.data.gallery.forEach((item) => {
+    assets.push(item.image.url);
+  });
 
-  // about.data.body.forEach((section) => {
-  //   if (section.slice_type === "gallery") {
-  //     section.items.forEach((item) => {
-  //       assets.push(item.image.url);
-  //     });
-  //   }
-  // });
+  about.data.body.forEach((section) => {
+    if (section.slice_type === "gallery") {
+      section.items.forEach((item) => {
+        assets.push(item.image.url);
+      });
+    }
+  });
 
-  // collections.forEach((collection) => {
-  //   collection.data.products.forEach((item) => {
-  //     assets.push(item.products_product.data.image.url);
-  //     assets.push(item.products_product.data.model.url);
-  //   });
-  // });
+  collections.forEach((collection) => {
+    collection.data.products.forEach((item) => {
+      assets.push(item.products_product.data.image.url);
+      assets.push(item.products_product.data.model.url);
+    });
+  });
 
   return {
     about,
+    assets,
     home,
     meta,
     navigation,
     preloader,
     collections,
-    // assets,
     // collections,
     // products,
   };

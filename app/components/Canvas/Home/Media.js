@@ -1,12 +1,4 @@
-import {
-  Texture,
-  Geometry,
-  Renderer,
-  Box,
-  Mesh,
-  Transform,
-  Program,
-} from "ogl";
+import { Mesh, Program } from "ogl";
 import GSAP from "gsap";
 
 import vertex from "shaders/plain-vertex.glsl";
@@ -33,12 +25,7 @@ export default class Media {
   }
 
   createTexture() {
-    this.texture = new Texture(this.gl);
-
-    this.image = new window.Image();
-    this.image.crossOrigin = "anonymous";
-    this.image.src = this.element.getAttribute("data-src");
-    this.image.onload = () => (this.texture.image = this.image);
+    this.texture = window.TEXTURES[this.element.getAttribute("data-src")];
   }
 
   createProgram() {
@@ -80,7 +67,7 @@ export default class Media {
       },
       {
         value: 1,
-      }
+      },
     );
   }
 
@@ -107,6 +94,7 @@ export default class Media {
       this.x * this.sizes.width +
       this.extra.x;
   }
+
   updateY(y = 0) {
     this.y = (this.bounds.top + y) / window.innerHeight;
 
