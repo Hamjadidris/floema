@@ -1,8 +1,8 @@
 import { Mesh, Program } from "ogl";
 import GSAP from "gsap";
 
-import vertex from "shaders/plain-vertex.glsl";
-import fragment from "shaders/plain-fragment.glsl";
+import vertex from "shaders/home-vertex.glsl";
+import fragment from "shaders/home-fragment.glsl";
 
 export default class Media {
   constructor({ index, element, gl, geometry, scene, sizes }) {
@@ -34,6 +34,8 @@ export default class Media {
       fragment,
       uniforms: {
         uAlpha: { value: 0 },
+        uSpeed: { value: 0 },
+        uViewportSizes: { value: [this.sizes.width, this.sizes.height] },
         tMap: { value: this.texture },
       },
     });
@@ -66,7 +68,7 @@ export default class Media {
         value: 0,
       },
       {
-        value: 1,
+        value: 0.4,
       },
     );
   }
@@ -105,11 +107,13 @@ export default class Media {
       this.extra.y;
   }
 
-  update(scroll) {
+  update(scroll, speed) {
     if (!this.bounds) return;
 
     this.updateX(scroll.x);
     this.updateY(scroll.y);
+
+    this.program.uniforms.uSpeed.value = speed;
   }
 
   onResize(sizes, scroll) {
