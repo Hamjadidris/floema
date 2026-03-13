@@ -89,7 +89,7 @@ export default class Page {
         return new Paragraph({
           element,
         });
-      }
+      },
     );
 
     this.animations.push(...this.animationsParagraphs);
@@ -112,13 +112,13 @@ export default class Page {
         return new Highlight({
           element,
         });
-      }
+      },
     );
 
     this.animations.push(...this.animationsHighlights);
   }
 
-  show() {
+  show(animation) {
     return new Promise((resolve) => {
       ColorsManager.change({
         backgroundColor: this.element.getAttribute("data-background"),
@@ -127,15 +127,19 @@ export default class Page {
 
       this.animationIn = new GSAP.timeline();
 
-      this.animationIn.fromTo(
-        this.element,
-        {
-          autoAlpha: 0,
-        },
-        {
-          autoAlpha: 1,
-        }
-      );
+      if (animation) {
+        this.animationIn = animation;
+      } else {
+        this.animationIn.fromTo(
+          this.element,
+          {
+            autoAlpha: 0,
+          },
+          {
+            autoAlpha: 1,
+          },
+        );
+      }
 
       this.animationIn.call(() => {
         this.addEventListeners();
@@ -174,13 +178,13 @@ export default class Page {
     this.scroll.target = GSAP.utils.clamp(
       0,
       this.scroll.limit,
-      this.scroll.target
+      this.scroll.target,
     );
 
     this.scroll.current = GSAP.utils.interpolate(
       this.scroll.current,
       this.scroll.target,
-      0.1
+      0.1,
     );
 
     if (this.scroll.current < 0.01) {
@@ -188,9 +192,8 @@ export default class Page {
     }
 
     if (this.elements.wrapper) {
-      this.elements.wrapper.style[
-        this.transformPrefix
-      ] = `translateY(-${this.scroll.current}px)`;
+      this.elements.wrapper.style[this.transformPrefix] =
+        `translateY(-${this.scroll.current}px)`;
     }
   }
 

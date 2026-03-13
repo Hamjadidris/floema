@@ -3,6 +3,9 @@ import { Camera, Renderer, Transform } from "ogl";
 import Home from "./Home";
 import About from "./About";
 import Collections from "./Collections";
+import Detail from "./Detail";
+
+import Transition from "./Transition";
 
 export default class Canvas {
   constructor({ template }) {
@@ -65,6 +68,16 @@ export default class Canvas {
       gl: this.gl,
       scene: this.scene,
       sizes: this.sizes,
+      transition: this.transition,
+    });
+  }
+
+  createDetail() {
+    this.detail = new Detail({
+      gl: this.gl,
+      scene: this.scene,
+      sizes: this.sizes,
+      transition: this.transition,
     });
   }
 
@@ -89,7 +102,14 @@ export default class Canvas {
     this.collections = null;
   }
 
-  onChangeStart() {
+  destroyDetail() {
+    if (!this.detail) return;
+
+    this.detail.destroy();
+    this.detail = null;
+  }
+
+  onChangeStart(template, url) {
     if (this.home) {
       this.home.hide();
     }
@@ -101,6 +121,25 @@ export default class Canvas {
     if (this.collections) {
       this.collections.hide();
     }
+
+    if (this.detail) {
+      this.detail.hide();
+    }
+
+    this.isFromDetailToCollections = this.template === "detail" && url.indexOf("collections") > -1; // prettier-ignore
+    this.isFromCollectionsToDetail = this.template === 'collections' && url.indexOf('detail') > -1; // prettier-ignore
+
+    if (this.isFromCollectionsToDetail || this.isFromDetailToCollections) {
+      this.transition = new Transition({
+        url,
+        gl: this.gl,
+        scene: this.scene,
+        sizes: this.sizes,
+        collections: this.collections,
+      });
+
+      this.transition.setElement(this.collections || this.detail);
+    }
   }
 
   onChangeEnd(template) {
@@ -110,19 +149,25 @@ export default class Canvas {
       this.destroyHome();
     }
 
-    if (template === "collections") {
-      this.gl.canvas.style.zIndex = 1000;
-      this.createCollections();
-    } else if (this.collections) {
-      this.gl.canvas.style.zIndex = "";
-      this.destroyCollections();
-    }
-
     if (template === "about") {
       this.createAbout();
     } else if (this.about) {
       this.destroyAbout();
     }
+
+    if (template === "detail") {
+      this.createDetail();
+    } else if (this.detail) {
+      this.destroyDetail();
+    }
+
+    if (template === "collections") {
+      this.createCollections();
+    } else if (this.collections) {
+      this.destroyCollections();
+    }
+
+    this.template = template;
   }
 
   onPreloaded() {
@@ -160,6 +205,10 @@ export default class Canvas {
     if (this.collections) {
       this.collections.onResize(values);
     }
+
+    if (this.detail) {
+      this.detail.onResize(values);
+    }
   }
 
   onTouchDown(e) {
@@ -183,6 +232,10 @@ export default class Canvas {
 
     if (this.collections) {
       this.collections.onTouchDown(values);
+    }
+
+    if (this.detail) {
+      this.detail.onTouchDown(values);
     }
   }
 
@@ -211,6 +264,10 @@ export default class Canvas {
     if (this.collections) {
       this.collections.onTouchMove(values);
     }
+
+    if (this.detail) {
+      this.detail.onTouchMove(values);
+    }
   }
 
   onTouchUp(e) {
@@ -238,6 +295,10 @@ export default class Canvas {
     if (this.collections) {
       this.collections.onTouchUp(values);
     }
+
+    if (this.detail) {
+      this.detail.onTouchUp(values);
+    }
   }
 
   onWheel(event) {
@@ -261,6 +322,10 @@ export default class Canvas {
 
     if (this.collections) {
       this.collections.update(scroll);
+    }
+
+    if (this.detail) {
+      this.detail.update(scroll);
     }
 
     this.renderer.render({

@@ -77,7 +77,7 @@ class App {
   }
 
   async onChange({ url, push = true }) {
-    this.canvas.onChangeStart(this.template);
+    this.canvas.onChangeStart(this.template, url);
 
     await this.page.hide();
 
@@ -86,9 +86,9 @@ class App {
     if (res.status === 200) {
       const html = await res.text();
       const div = document.createElement("div");
-      
+
       if (push) {
-        window.history.pushState({}, "", url);
+        // window.history.pushState({}, "", url);
       }
 
       div.innerHTML = html;

@@ -8,10 +8,13 @@ import Media from "./Media";
 import map from "lodash/map";
 
 export default class Collections {
-  constructor({ gl, scene, sizes }) {
+  constructor({ gl, scene, sizes, transition }) {
+    this.id = "collections";
+
     this.gl = gl;
     this.scene = scene;
     this.sizes = sizes;
+    this.transition = transition;
 
     this.transformPrefix = Prefix("transform");
 
@@ -35,6 +38,10 @@ export default class Collections {
 
     this.createGeometry();
     this.createGallery();
+
+    this.onResize({
+      sizes: this.sizes,
+    });
 
     this.group.setParent(this.scene);
 
@@ -63,7 +70,25 @@ export default class Collections {
   }
 
   // Animations
-  show() {
+  async show() {
+    if (this.transition) {
+      const { src } = this.transition.mesh.program.uniforms.tMap.value.image;
+      const texture = window.TEXTURES[src];
+      const media = this.medias.find((media) => media.texture === texture);
+
+      GSAP.delayedCall(1, (_) => {
+        this.scroll.current =
+          this.scroll.target =
+          this.scroll.last =
+          this.scroll.start =
+            -media.mesh.position.x;
+
+        console.log(media.mesh.position.x, this.scroll.current);
+      });
+
+      this.transition.animate(this.medias[0].mesh, (_) => {});
+    }
+
     map(this.medias, (media) => media.show());
   }
 
@@ -115,8 +140,6 @@ export default class Collections {
   }
 
   update() {
-    if (!this.bounds) return;
-
     this.scroll.target = GSAP.utils.clamp(
       -this.scroll.limit,
       0,
@@ -129,7 +152,8 @@ export default class Collections {
       this.scroll.lerp,
     );
 
-    this.galleryElement.style[this.transformPrefix] = `translateX(${this.scroll.current}px)`;
+    this.galleryElement.style[this.transformPrefix] =
+      `translateX(${this.scroll.current}px)`;
 
     if (this.scroll.last > this.scroll.current) {
       this.scroll.direction = "left";

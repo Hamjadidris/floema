@@ -3,8 +3,8 @@ import GSAP from "gsap";
 
 import Detection from "classes/Detection";
 
-import vertex from "shaders/plain-vertex.glsl";
-import fragment from "shaders/plain-fragment.glsl";
+import vertex from "shaders/plane-vertex.glsl";
+import fragment from "shaders/plane-fragment.glsl";
 
 export default class Media {
   constructor({ index, element, gl, geometry, scene, sizes }) {
@@ -16,11 +16,17 @@ export default class Media {
     this.scene = scene;
     this.sizes = sizes;
 
+    this.extra = {
+      x: 0,
+      y: 0,
+    };
+
     this.createTexture();
     this.createProgram();
     this.createMesh();
-
-    this.extra = 0;
+    this.createBounds({
+      sizes: this.sizes,
+    });
   }
 
   createTexture() {
@@ -120,8 +126,6 @@ export default class Media {
   }
 
   update(scroll) {
-    if (!this.bounds) return;
-
     this.updateRotation();
     this.updateScale();
     this.updateX(scroll);

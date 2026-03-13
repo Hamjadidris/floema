@@ -15,6 +15,10 @@ export default class About {
     this.createGeometry();
     this.createGalleries();
 
+    this.onResize({
+      sizes: this.sizes,
+    });
+
     this.group.setParent(scene);
 
     this.x = {
