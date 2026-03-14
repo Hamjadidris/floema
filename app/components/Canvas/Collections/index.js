@@ -76,20 +76,26 @@ export default class Collections {
       const texture = window.TEXTURES[src];
       const media = this.medias.find((media) => media.texture === texture);
 
-      GSAP.delayedCall(1, (_) => {
+      const scroll = -media.bounds.left - media.bounds.width / 2 + window.innerWidth / 2; // prettier-ignore
+
+      this.transition.animate(media.mesh, (_) => {
+        media.opacity.multiplier = 1;
+
+        map(this.medias, (item) => {
+          if (media !== item) {
+            item.show();
+          }
+        });
+
         this.scroll.current =
           this.scroll.target =
-          this.scroll.last =
           this.scroll.start =
-            -media.mesh.position.x;
-
-        console.log(media.mesh.position.x, this.scroll.current);
+          this.scroll.last =
+            scroll;
       });
-
-      this.transition.animate(this.medias[0].mesh, (_) => {});
+    } else {
+      map(this.medias, (media) => media.show());
     }
-
-    map(this.medias, (media) => media.show());
   }
 
   hide() {
@@ -163,14 +169,15 @@ export default class Collections {
 
     this.scroll.last = this.scroll.current;
 
-    map(this.medias, (media, index) => {
-      media.update(this.scroll.current);
-    });
+    const index = Math.floor( Math.abs( (this.scroll.current - this.medias[0].bounds.width / 2) / this.scroll.limit ) * (this.medias.length - 1) ); // prettier-ignore
 
-    const index = Math.floor(Math.abs(this.scroll.current / this.scroll.limit) * this.medias.length) // prettier-ignore
     if (this.index !== index) {
       this.onChange(index);
     }
+
+    map(this.medias, (media, index) => {
+      media.update(this.scroll.current, this.index);
+    });
   }
 
   destroy() {

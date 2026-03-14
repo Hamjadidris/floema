@@ -41,6 +41,10 @@ export default class Transition {
     this.mesh.scale.y = mesh.scale.y;
     this.mesh.scale.z = mesh.scale.z;
 
+    this.mesh.rotation.x = mesh.rotation.x;
+    this.mesh.rotation.y = mesh.rotation.y;
+    this.mesh.rotation.z = mesh.rotation.z;
+
     this.mesh.position.x = mesh.position.x;
     this.mesh.position.y = mesh.position.y;
     this.mesh.position.z = mesh.position.z + 0.01;
@@ -72,9 +76,7 @@ export default class Transition {
    * Animations.
    */
   animate(element, onComplete) {
-    const timeline = GSAP.timeline({
-      onComplete,
-    });
+    const timeline = GSAP.timeline({});
 
     timeline.to(
       this.mesh.scale,
@@ -84,6 +86,18 @@ export default class Transition {
         x: element.scale.x,
         y: element.scale.y,
         z: element.scale.z,
+      },
+      0,
+    );
+
+    timeline.to(
+      this.mesh.rotation,
+      {
+        duration: 1.5,
+        ease: "expo.inOut",
+        x: element.rotation.x,
+        y: element.rotation.y,
+        z: element.rotation.z,
       },
       0,
     );
@@ -101,7 +115,15 @@ export default class Transition {
     );
 
     timeline.call((_) => {
-      this.scene.removeChild(this.mesh);
+      onComplete();
     });
+
+    timeline.call(
+      (_) => {
+        this.scene.removeChild(this.mesh);
+      },
+      null,
+      "+=0.2",
+    );
   }
 }
